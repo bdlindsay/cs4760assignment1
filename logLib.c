@@ -35,10 +35,10 @@ int addMsg(data_t data) {
 }
 
 void clearLog(void) {
-	log_t tmpNode;
+	log_t *tmpNode;
 	while((tmpNode = headptr) != NULL) {
 		headptr = headptr->next;
-		free (tmpNode);
+		free(tmpNode);
 	}	
 	tailptr->next = NULL;
 	tailptr = NULL;

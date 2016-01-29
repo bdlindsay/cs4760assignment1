@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "log.h"
 #define TRAV_INIT_SIZE 8
 
@@ -11,7 +12,7 @@ typedef struct list_struct {
 static log_t *headptr = NULL;
 static log_t *tailptr = NULL;
 
-int addMsg(data_t data) {
+static int addMsg(data_t data) {
 	log_t *newNode;
 	int nodeSize;
 
@@ -34,7 +35,7 @@ int addMsg(data_t data) {
 	return 0;
 }
 
-void clearLog(void) {
+static void clearLog(void) {
 	log_t *tmpNode;
 	while((tmpNode = headptr) != NULL) {
 		headptr = headptr->next;
@@ -44,10 +45,31 @@ void clearLog(void) {
 	tailptr = NULL;
 }
 
-char *getLog(void) {
-	return NULL;
+static char *getLog(void) {
+	int size = 0;
+	log_t *curNode = headptr;
+	char *entireLogHolder = NULL;
+	if (headptr == NULL) { // nothing to return if empty list
+		return NULL;
+	}	
+	// cycle through linked list and get total string length
+	while (curNode != NULL) {
+		size += strlen(curNode->item.string);
+		curNode = curNode->next;
+	}
+	entireLogHolder = malloc(sizeof(char)*(size+1)); // total string length plus 1 for \0
+	if(entireLogHolder == NULL) {
+		printf("malloc failed\n");
+		return NULL;
+	}
+	curNode = headptr;
+	while (curNode != NULL) { // concat each string to the log holder
+		entireLogHolder = strcat(entireLogHolder, curNode->item.string);
+		curNode = headptr->next;
+	}	
+	return entireLogHolder;
 }
 
-int saveLog(char *filename) {
+static int saveLog(char *filename) {
 	return 0;
 }	

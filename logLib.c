@@ -12,7 +12,7 @@ typedef struct list_struct {
 static log_t *headptr = NULL;
 static log_t *tailptr = NULL;
 
-static int addMsg(data_t data) {
+int addMsg(data_t data) {
 	log_t *newNode;
 	int nodeSize;
 
@@ -35,7 +35,7 @@ static int addMsg(data_t data) {
 	return 0;
 }
 
-static void clearLog(void) {
+void clearLog(void) {
 	log_t *tmpNode;
 	while((tmpNode = headptr) != NULL) {
 		headptr = headptr->next;
@@ -45,7 +45,7 @@ static void clearLog(void) {
 	tailptr = NULL;
 }
 
-static char *getLog(void) {
+char *getLog(void) {
 	int size = 0;
 	log_t *curNode = headptr;
 	char *entireLogHolder = NULL;
@@ -63,6 +63,7 @@ static char *getLog(void) {
 		return NULL;
 	}
 	curNode = headptr;
+	// concating extra values at the beginning TODO fix bug
 	while (curNode != NULL) { // concat each string to the log holder
 		entireLogHolder = strcat(entireLogHolder, curNode->item.string);
 		curNode = headptr->next;
@@ -70,6 +71,17 @@ static char *getLog(void) {
 	return entireLogHolder;
 }
 
-static int saveLog(char *filename) {
+int saveLog(char *filename) {
+	FILE * fp;
+	char *logToWrite = NULL;
+	fp = fopen(filename, "w");
+	logToWrite = getLog();
+	if(logToWrite == NULL) {
+		printf("getLog returned NULL");
+		return -1;
+	}	
+	fprintf(fp, "Testing fprintf...\n%s\n", logToWrite);
+	fputs("Testing fputs...\n", fp);
+	fclose(fp);
 	return 0;
 }	

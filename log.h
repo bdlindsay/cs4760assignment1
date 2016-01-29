@@ -8,7 +8,7 @@ typedef struct data_struct {
 	char *string;
 } data_t;
 
-static int addMsg(data_t data);
-static void clearLog(void);
-static char *getLog(void);
-static int saveLog(char *filename);
+int addMsg(data_t data);
+void clearLog(void);
+char *getLog(void);
+int saveLog(char *filename);

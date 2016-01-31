@@ -20,12 +20,12 @@ int addMsg(data_t data) {
 	newNode->item.time = data.time;
 	newNode->item.string = (char *)newNode + sizeof(log_t);
 	strcpy(newNode->item.string, data.string);
-	newNode->next == NULL;
+	newNode->next = NULL;
 	if (headptr == NULL) { // if log is empty set the headptr
-		printf("Setting headpt\n");
+		//printf("Setting headpt\n");// debug helper
 		headptr = newNode;
 	} else {
-		printf("Setting item\n");
+		//printf("Setting log entry\n"); // debug helper
 		tailptr->next = newNode;
 	}
 	tailptr = newNode;
@@ -65,13 +65,13 @@ char *getLog(void) {
 	}
 	curNode = headptr;
 	while (curNode != NULL) { // concat each string to the log holder
-		//printf("\n getLog: getting data for entry: %d\n", counter);
+		//printf("\n getLog: getting data for entry: %d\n", counter); // debug helper
 		entryForFormat = ctime(&curNode->item.time);
 		if( strlen(entryForFormat) > 1) { // remove the line break at the end
 			entryForFormat[strlen(entryForFormat)-1] = ':';
 		}	
 		entryForFormat = strcat(entryForFormat, curNode->item.string);
-		//printf("|%s|", entireLogHolder);
+		//printf("|%s|", entireLogHolder); // debug helper
 		entireLogHolder = strcat(entireLogHolder, entryForFormat);
 		entireLogHolder = strcat(entireLogHolder, "\n");
 		curNode = curNode->next;
@@ -84,7 +84,7 @@ char *getLog(void) {
 int saveLog(char *filename) {
 	FILE * fp;
 	char *logToWrite = NULL;
-	fp = fopen("log.txt", "a");
+	fp = fopen(filename, "a");
 	logToWrite = getLog();
 	if(logToWrite == NULL) {
 		printf("Log is empty\n");

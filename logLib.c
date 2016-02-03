@@ -14,8 +14,8 @@ int addMsg(data_t data, char *argv0) {
 	int nodeSize;
 	log_t *curPtr = NULL;
 	int itemNum = 0;
-	// allocate the node
-	nodeSize = sizeof(log_t) + strlen(data.string) + strlen(argv0) + 3;
+	// allocate the node - 10 for ": Error: "\0
+	nodeSize = sizeof(log_t) + strlen(data.string) + strlen(argv0) + 10;
 	if((newNode = (log_t *)(malloc(nodeSize))) == NULL) { /*couldn't add node*/
 		return -1;
 	}
@@ -23,7 +23,7 @@ int addMsg(data_t data, char *argv0) {
 	newNode->item.time = data.time;
 	newNode->item.string = (char *)newNode + sizeof(log_t);
 	strcpy(newNode->item.string, argv0);
-	newNode->item.string = strcat(newNode->item.string, ": ");
+	newNode->item.string = strcat(newNode->item.string, ": Error: ");
 	newNode->item.string = strcat(newNode->item.string, data.string);
 	newNode->next = NULL;
 	// add it to the linked list

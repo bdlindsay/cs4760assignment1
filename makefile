@@ -1,8 +1,23 @@
-a.out: logLib.o main.o
-	gcc -g logLib.o main.o
+CC = gcc
+CFLAGS = -g
+LD = $(CC)
+LDFLAGS =
+RM = rm
 
-logLib.o: logLib.c
-	gcc -g -c logLib.c log.h
+EXE = a.out
+SRCS = main.c logLib.c
+OBJS = ${SRCS:.c=.o}
 
-main.o: main.c
-	gcc -g -c main.c log.h
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+
+all : $(EXE)
+
+$(EXE) : $(OBJS)
+	$(LD) -o $@ $(OBJS)
+
+$(OBJS) : log.h
+
+clean :
+	-$(RM) -f $(EXE) $(OBJS)
+

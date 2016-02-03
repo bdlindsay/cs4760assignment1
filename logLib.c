@@ -8,24 +8,28 @@ typedef struct list_struct {
 static log_t *headptr = NULL;
 static log_t *tailptr = NULL;
 
-int addMsg(data_t data) {
+// add message edited from Robins & Robins programming ex. 2.7
+int addMsg(data_t data, char *argv0) {
 	log_t *newNode;
 	int nodeSize;
 	log_t *curPtr = NULL;
 	int itemNum = 0;
-	nodeSize = sizeof(log_t) + strlen(data.string) + 1;
+	// allocate the node
+	nodeSize = sizeof(log_t) + strlen(data.string) + strlen(argv0) + 3;
 	if((newNode = (log_t *)(malloc(nodeSize))) == NULL) { /*couldn't add node*/
 		return -1;
 	}
+	// set data for new node
 	newNode->item.time = data.time;
 	newNode->item.string = (char *)newNode + sizeof(log_t);
-	strcpy(newNode->item.string, data.string);
+	strcpy(newNode->item.string, argv0);
+	newNode->item.string = strcat(newNode->item.string, ": ");
+	newNode->item.string = strcat(newNode->item.string, data.string);
 	newNode->next = NULL;
+	// add it to the linked list
 	if (headptr == NULL) { // if log is empty set the headptr
-		//printf("Setting headpt\n");// debug helper
 		headptr = newNode;
 	} else {
-		//printf("Setting log entry\n"); // debug helper
 		tailptr->next = newNode;
 	}
 	tailptr = newNode;
@@ -35,6 +39,7 @@ int addMsg(data_t data) {
 
 void clearLog(void) {
 	log_t *tmpNode;
+	// free the memory for the entire list
 	while((tmpNode = headptr) != NULL) {
 		headptr = headptr->next;
 		free(tmpNode);
@@ -57,40 +62,46 @@ char *getLog(void) {
 		size += strlen(ctime(&curNode->item.time));
 		curNode = curNode->next;
 	}
-	//printf("NumEntries: %d Size: %d\n", numOfEntries, size);
-	entireLogHolder = malloc(sizeof(char)*(size+1+numOfEntries)); // total string length plus 1 for \0
+	// total string length plus 1 for \0 : numOfEntires * 2 to add formatting to log
+	entireLogHolder = malloc(sizeof(char)*(size+1+(numOfEntries*2))); 
 	if(entireLogHolder == NULL) {
 		printf("malloc failed\n");
 		return NULL;
 	}
+	// format and combine the logs into one char*
 	curNode = headptr;
 	while (curNode != NULL) { // concat each string to the log holder
-		//printf("\n getLog: getting data for entry: %d\n", counter); // debug helper
 		entryForFormat = ctime(&curNode->item.time);
 		if( strlen(entryForFormat) > 1) { // remove the line break at the end
 			entryForFormat[strlen(entryForFormat)-1] = ':';
 		}	
 		entryForFormat = strcat(entryForFormat, curNode->item.string);
-		//printf("|%s|", entireLogHolder); // debug helper
 		entireLogHolder = strcat(entireLogHolder, entryForFormat);
 		entireLogHolder = strcat(entireLogHolder, "\n");
 		curNode = curNode->next;
 	}	
 	entireLogHolder += (strlen(entireLogHolder) - size - (numOfEntries-1));
-	//printf("\n RETURN: %d --  %s\n", strlen(entireLogHolder), entireLogHolder);
 	return entireLogHolder;
 }
 
 int saveLog(char *filename) {
 	FILE * fp;
-	char *logToWrite = NULL;
-	fp = fopen(filename, "a");
+	char *logToWrite;
+	// prepare to append to log.txt
+	fp = fopen("log.txt", "a");
+	if(!fp) {
+		perror("Open file error: ");
+		return -1;
+	}	
+	// get the log to write to the file
 	logToWrite = getLog();
+	// if there is no logs saved
 	if(logToWrite == NULL) {
 		printf("Log is empty\n");
 		return 0;
 	}	
-	fprintf(fp, "Testing fprintf...\n%s\n", logToWrite);
+	// write to the file
+	fprintf(fp,"%s\n", logToWrite);
 	fclose(fp);
 	return 0;
 }	

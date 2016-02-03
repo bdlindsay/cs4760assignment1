@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
 	char *mvalue = NULL; // should log any value given here
 	int c;
 
-	// clear the old log
+	// clear any old log that could exist
 	clearLog();
 	// getopt example
 	while((c = getopt(argc, argv, "am:")) != -1) { // ck options
@@ -23,19 +23,19 @@ int main(int argc, char *argv[]) {
 				// send mvalue to logger 
 				tcurrent = time(NULL);
 				entry = (data_t){.time = tcurrent, .string = mvalue};
-				addMsg(entry);
+				addMsg(entry, argv[0]);
 				break;
 			case '?':
 				if(optopt == 'm') { // init and add entry to log
 					tcurrent = time(NULL);
 					data = "Error: option -m requires an argument";
 					entry = (data_t){.time = tcurrent, .string = data};
-					addMsg(entry);
+					addMsg(entry, argv[0]);
 				} else { // init and add entry to log
 					tcurrent = time(NULL);
 					data = "Error: options available are  a & c";
 					entry = (data_t){.time = tcurrent, .string = data};
-					addMsg(entry);
+					addMsg(entry, argv[0]);
 				}
 				break;
 			default:
@@ -51,13 +51,21 @@ int main(int argc, char *argv[]) {
 			// log for perror
 			tcurrent = time(NULL);
 			entry = (data_t){.time = tcurrent, .string = strerror(1)}; 
-			addMsg(entry);
+			addMsg(entry, argv[0]);
 		}	
 	}
 	// another random 'error'
 	tcurrent = time(NULL);
 	entry = (data_t){.time = tcurrent, .string = "Test Error Entry"};
-	addMsg(entry);
+	addMsg(entry, argv[0]);
+	// another random 'error'
+	tcurrent = time(NULL);
+	entry = (data_t){.time = tcurrent, .string = "Test Error Entry 2"};
+	addMsg(entry, argv[0]);
+	// another random 'error'
+	tcurrent = time(NULL);
+	entry = (data_t){.time = tcurrent, .string = "Test Error Entry 3"};
+	addMsg(entry, argv[0]);
 	// retrieve entire log
 	data = getLog();
 	// print entire log

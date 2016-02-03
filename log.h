@@ -9,7 +9,7 @@ typedef struct data_struct {
 	char *string;
 } data_t;
 
-int addMsg(data_t data);
+int addMsg(data_t data, char *argv0);
 void clearLog(void);
 char *getLog(void);
 int saveLog(char *filename);

@@ -17,6 +17,7 @@ int addMsg(data_t data, char *argv0) {
 	// allocate the node - 10 for ": Error: "\0
 	nodeSize = sizeof(log_t) + strlen(data.string) + strlen(argv0) + 10;
 	if((newNode = (log_t *)(malloc(nodeSize))) == NULL) { /*couldn't add node*/
+		perror("Error Malloc failure: additional details: ");
 		return -1;
 	}
 	// set data for new node
@@ -65,7 +66,7 @@ char *getLog(void) {
 	// total string length plus 1 for \0 : numOfEntires * 2 to add formatting to log
 	entireLogHolder = malloc(sizeof(char)*(size+1+(numOfEntries*2))); 
 	if(entireLogHolder == NULL) {
-		printf("malloc failed\n");
+		perror("Error Malloc failure: additional details: ");
 		return NULL;
 	}
 	// format and combine the logs into one char*

@@ -7,6 +7,8 @@ The main.c program is a test driver for logLib.c. Compile the code using the Mak
 
 recommended usage: a.out -am "my message"
 
+The error messages follow the format specified in the assignment file but with time info of the log preceeding it as suggested by the text the assignment is based around. 
+
 Following the printing of the entire log for the program, the log will be saved to a file name log.txt in the working directory. 
 
 GitHub was used for version control. To see change log, use 'git log'. Cloned repository from working directory so .git/logs will not show all commit messages. 
